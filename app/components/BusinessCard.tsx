@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 type BusinessCardProps = {
     id: number
@@ -35,14 +37,16 @@ export default function BusinessCard({
                 method: "DELETE",
             })
 
+            const data = await response.json()
+
             if (!response.ok) {
-                throw new Error("Erreur lors de la suppression")
+                throw new Error(data.error || "Erreur lors de la suppression")
             }
 
             router.refresh()
-        } catch (error) {
+        } catch (error: any) {
             console.error(error)
-            alert("Impossible de supprimer l'entreprise")
+            toast.error(error.message || "Impossible de supprimer l'entreprise")
         } finally {
             setLoading(false)
         }

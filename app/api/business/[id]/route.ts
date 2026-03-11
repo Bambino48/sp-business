@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { prisma } from "../../../lib/prisma"
 import { NextResponse } from "next/server"
+import { cookies } from "next/headers"
+import { verifyToken } from "../../../lib/auth"
 
 type Params = {
     params: Promise<{
@@ -10,6 +12,16 @@ type Params = {
 
 export async function DELETE(req: Request, { params }: Params) {
     try {
+
+        const cookieStore = await cookies()
+        const token = cookieStore.get("token")?.value
+
+        if (!token || !verifyToken(token)) {
+            return NextResponse.json(
+                { error: "Non autorisé" },
+                { status: 401 }
+            )
+        }
         const { id } = await params
         const businessId = Number(id)
 
@@ -52,6 +64,16 @@ export async function DELETE(req: Request, { params }: Params) {
 export async function PUT(req: Request, { params }: Params) {
 
     try {
+
+        const cookieStore = await cookies()
+        const token = cookieStore.get("token")?.value
+
+        if (!token || !verifyToken(token)) {
+            return NextResponse.json(
+                { error: "Non autorisé" },
+                { status: 401 }
+            )
+        }
 
         const { id } = await params
         const businessId = Number(id)
