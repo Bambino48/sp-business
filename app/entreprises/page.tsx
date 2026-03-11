@@ -18,6 +18,7 @@ export default async function EntreprisesPage() {
                 {entreprises.map((entreprise) => (
                     <BusinessCard
                         key={entreprise.id}
+                        id={entreprise.id}
                         name={entreprise.name}
                         category={entreprise.category}
                         location={entreprise.location}
