@@ -1,42 +1,22 @@
 import { prisma } from "../../lib/prisma"
 import { NextResponse } from "next/server"
+import { businessSchema } from "../../lib/validation"
 
 export async function POST(req: Request) {
     try {
         const data = await req.json()
 
-        const name = data.name?.trim()
-        const category = data.category?.trim()
-        const location = data.location?.trim()
+        const result = businessSchema.safeParse(data)
 
-        if (!name || !category || !location) {
+        if (!result.success) {
             return NextResponse.json(
-                { error: "Tous les champs sont obligatoires" },
+                { error: result.error.flatten() },
                 { status: 400 }
             )
         }
 
-        const existingBusiness = await prisma.business.findFirst({
-            where: {
-                name,
-                category,
-                location,
-            },
-        })
-
-        if (existingBusiness) {
-            return NextResponse.json(
-                { error: "Cette entreprise existe déjà" },
-                { status: 409 }
-            )
-        }
-
         const business = await prisma.business.create({
-            data: {
-                name,
-                category,
-                location,
-            },
+            data: result.data
         })
 
         return NextResponse.json(business, { status: 201 })
