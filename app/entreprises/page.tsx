@@ -1,6 +1,6 @@
 import BusinessCard from "../components/BusinessCard"
-import { prisma } from "../lib/prisma"
 import LogoutButton from "../components/LogoutButton"
+import { prisma } from "../lib/prisma"
 
 export default async function EntreprisesPage() {
     const entreprises = await prisma.business.findMany({
@@ -11,12 +11,18 @@ export default async function EntreprisesPage() {
 
     return (
         <main className="p-10">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">
+            <div className="mb-8 border-4 border-red-500 p-4 bg-yellow-100">
+                <h1 className="text-3xl font-bold mb-4">
                     Entreprises de San Pedro
                 </h1>
 
-                <LogoutButton />
+                <div className="bg-black text-white p-4 inline-block">
+                    TEST LOGOUT
+                </div>
+
+                <div className="mt-4">
+                    <LogoutButton />
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
